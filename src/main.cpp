@@ -23,11 +23,7 @@
 
 // App Framework
 #include "app_framework.h"
-
-// Apps
-extern App_t app_home;
-extern App_t app_clock;
-extern App_t app_wifi;
+#include "app_registry.h"
 
 static const char* TAG = "MAIN";
 
@@ -115,13 +111,11 @@ void setup() {
         return;
     }
     
-    // 9. Load Apps (registering sample apps)
-    ESP_LOGI(TAG, "Step 9: Loading apps...");
-    app_register(&app_home);
-    app_register(&app_clock);
-    app_register(&app_wifi);
+    // 9. Load Apps (all 33 apps)
+    ESP_LOGI(TAG, "Step 9: Loading all 33 apps...");
+    int loaded = register_all_apps();
     
-    ESP_LOGI(TAG, "Loaded %d apps (targeting 33 total)", app_get_count());
+    ESP_LOGI(TAG, "Loaded %d apps", loaded);
     
     // 10. Focus-Carousel UI Init
     ESP_LOGI(TAG, "Step 10: Initializing Focus-Carousel UI...");
