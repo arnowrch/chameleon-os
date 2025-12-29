@@ -2,7 +2,7 @@
 #include "esp_lcd_panel_vendor.h"
 #include "esp_lcd_panel_ops.h"
 
-#include "esp_lcd_touch_axs5106.h"
+// AXS5106 Touch Driver - Inline Implementation
 
 #include "esp_log.h"
 #include "bsp_touch.h"

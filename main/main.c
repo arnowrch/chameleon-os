@@ -1,4 +1,4 @@
-﻿#include <stdio.h>
+#include <stdio.h>
 #include "esp_log.h"
 #include "nvs_flash.h"
 #include "esp_event.h"
@@ -6,8 +6,8 @@
 #include "freertos/task.h"
 
 // BSP Hardware Abstraction Layer
-#include "bsp_display.h"
-#include "bsp_touch.h"
+// #include "bsp_display.h" // TODO: Implement JD9853 driver
+// #include "bsp_touch.h" // TODO: Implement AXS5106 driver
 #include "bsp_i2c.h"
 #include "bsp_wifi.h"
 
@@ -54,26 +54,14 @@ void app_main(void) {
     ESP_LOGI(TAG, " WiFi initialized");
 
     // 
-    // STEP 4: Display System (Panel Gap 0,34 at 90°)
-    // 
-    ESP_LOGI(TAG, "[4/7] Initializing Display (JD9853)...");
-    ESP_LOGW(TAG, " Panel Gap: (0, 34) at 90° rotation");
-    
-    esp_lcd_panel_io_handle_t io_handle = NULL;
-    esp_lcd_panel_handle_t panel_handle = NULL;
-    
-    bsp_display_init(&io_handle, &panel_handle, 320 * 50);  // 320x50 buffer
-    ESP_LOGI(TAG, " Display ready (320x172 @ 90°)");
+    // STEP 4: Display - TEMPORARILY DISABLED
+    // TODO: Implement JD9853 display driver
+    ESP_LOGW(TAG, "[4/7] Display initialization SKIPPED (driver not implemented)");
 
-    // 
-    // STEP 5: Touch Controller (AXS5106)
-    // 
-    ESP_LOGI(TAG, "[5/7] Initializing Touch Controller...");
-    esp_lcd_touch_handle_t touch_handle = NULL;
-    bsp_touch_init(&touch_handle, i2c_bus, 320, 172, 90);
-    ESP_LOGI(TAG, " Touch ready");
+    // STEP 5: Touch - TEMPORARILY DISABLED  
+    // TODO: Implement AXS5106 touch driver
+    ESP_LOGW(TAG, "[5/7] Touch initialization SKIPPED (driver not implemented)");
 
-    // 
     // STEP 6: LVGL & UI Initialization
     // 
     ESP_LOGI(TAG, "[6/7] Initializing LVGL...");
@@ -81,23 +69,10 @@ void app_main(void) {
     ESP_LOGI(TAG, " LVGL ready");
 
     // 
-    // STEP 7: Backlight Fade-In (Luxury Effect)
-    // 
-    ESP_LOGI(TAG, "[7/7] Backlight fade-in...");
-    bsp_display_brightness_init();
-    bsp_display_set_brightness(0);
-    
-    for(int i = 0; i <= 100; i += 5) {
-        bsp_display_set_brightness(i);
-        vTaskDelay(pdMS_TO_TICKS(20));
-    }
-    ESP_LOGI(TAG, " Backlight at 100%%");
+    // STEP 7: Backlight - TEMPORARILY DISABLED
+    ESP_LOGW(TAG, "[7/7] Backlight initialization SKIPPED (display not initialized)");
 
-    // 
-    // System Ready
-    // 
-    ESP_LOGI(TAG, "");
-    ESP_LOGI(TAG, " Chameleon OS - System Ready!");
+    ESP_LOGI(TAG, " Chameleon OS - System Ready (MINIMAL MODE - Display/Touch disabled)!");
     ESP_LOGI(TAG, "Phase 1: Infrastructure Complete");
     ESP_LOGI(TAG, "Heap Free: %ld bytes", esp_get_free_heap_size());
     ESP_LOGI(TAG, "");

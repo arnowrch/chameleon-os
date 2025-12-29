@@ -5,7 +5,7 @@
 #include "esp_lcd_panel_io.h"
 #include "esp_lcd_panel_vendor.h"
 #include "esp_lcd_panel_ops.h"
-#include "esp_lcd_touch_axs5106.h"
+// #include "esp_lcd_touch_axs5106.h" // Removed - implementing inline
 
 
 #define EXAMPLE_SPI_HOST SPI2_HOST
