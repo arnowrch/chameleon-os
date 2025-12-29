@@ -1,5 +1,0 @@
-# CMakeLists.txt for the lvgl_touch_drivers component
-
-idf_component_register(SRCS "esp_lcd_jd9853.c"
-                    INCLUDE_DIRS "."
-                    REQUIRES "esp_lcd" "esp_lcd_touch")

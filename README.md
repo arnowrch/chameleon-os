@@ -1,300 +1,68 @@
-# 🦎 CHAMELEON OS
+# ESP32-S3 Luxury UI Kit (LVGL 9 + ESP-IDF)
 
-> **Ein universelles Betriebssystem für ESP32-S3 mit Touch-Display, das sich in 33 verschiedene spezialisierte Apps verwandelt.**
+Dieses Projekt dient als **State-of-the-Art** Basis-Framework für die Entwicklung von Touch-UIs auf dem ESP32-S3 mit einem 172x320 Display und LVGL 9.
 
----
+Das Design folgt einer klaren **Luxury UI** Philosophie (inspiriert von Tesla, Apple Home) mit Fokus auf Dunkel-Theme, Klarheit, Reaktionsgeschwindigkeit und Touch-Optimierung.
 
-## 🎯 Vision
+## ⚙️ Technische Spezifikationen
 
-**Ein Gerät. Eine Hardware. 33 verschiedene Möglichkeiten.**
+*   **MCU:** ESP32-S3
+*   **Framework:** ESP-IDF v5.x
+*   **UI-Bibliothek:** LVGL v9
+*   **Display:** 172x320 (Portrait), ST7789-kompatibel
+*   **Touch:** I2C-Touch-Controller (z.B. CST816S, AXS5106)
 
-Chameleon OS ist nicht einfach eine Firmware. Es ist eine **Produktionsplattform**:
+## ✨ Design-Standards (UI-Theme)
 
-1. **Bestellung kommt rein**: "Wir brauchen einen WiFi Analyzer"
-2. **Vorkonfigurierter ESP32-S3 wird angeschlossen**
-3. **Agent sagt**: "Das ist für WiFi Analyzer"
-4. **Agent spielt auf**: Alle notwendigen Apps und Konfigurationen
-5. **Gerät ist produktionsreif**: Verbauen im Gehäuse
+| Merkmal | Spezifikation |
+| :--- | :--- |
+| **Auflösung** | 172x320 (Portrait) |
+| **Farben** | Dunkelbasis (`#0B0B0B`) + Akzentfarben (Blau, Grün, Orange, Rot) |
+| **Fonts** | Montserrat (22px Bold, 18px Medium, 12px Regular) |
+| **Abstände** | 4px-Raster (UI_SPACE_* Konstanten) |
+| **Radius** | 8px (UI_RADIUS_SM) bis 16px (UI_RADIUS_LG) |
+| **Animationen** | 200ms `ease-in-out` (UI_ANIM_NORMAL) |
 
-**Ergebnis**: Jedes Produkt fühlt sich spezialisiert an, obwohl alle die gleiche Hardware nutzen.
+## 🏗️ Projektstruktur
 
----
+| Verzeichnis | Beschreibung |
+| :--- | :--- |
+| `main/` | Hauptanwendungscode, UI-Logik, Router, Theme und Komponenten. |
+| `components/bsp/` | Board Support Package (BSP) für Display, Touch, WiFi, Batterie etc. |
+| `components/lvgl_touch_drivers/` | Spezifische LVGL-Touch-Treiber (z.B. `esp_lcd_jd9853.c`). |
+| `sdkconfig` | ESP-IDF Konfiguration (optimiert für LVGL und PSRAM). |
 
-## 🏗️ ARCHITEKTUR
+## 🚀 Erste Schritte (Kompilierung)
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│ CHAMELEON OS: 4-SCHICHTEN-ARCHITEKTUR                       │
-├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│ LAYER 1: HARDWARE-ABSTRACTION (HAL)                        │
-│ ├─ Display (ST7789 + JD9853, Panel Gap 34, Rotation 90°)  │
-│ ├─ Touch (CST816S, I2C)                                    │
-│ ├─ WiFi (Auto-Reconnect, Reentrancy Guards)               │
-│ └─ NTP (SNTP, elegante Sync-Animation)                    │
-│                                                              │
-│ LAYER 2: FRAMEWORK                                          │
-│ ├─ Event Bus (Sensoren → Apps, nicht Timer-Chaos)         │
-│ ├─ Theme Manager (Semantische Farben + Style-Objekte)     │
-│ ├─ Carousel Navigation (Focus-Scaling, Animations)        │
-│ └─ Gesture Recognition (Swipe, Long-Press, Tap)           │
-│                                                              │
-│ LAYER 3: APPS (33 Dummies → Funktionsfähig)              │
-│ ├─ Sector A: Smart Home (Thermostat, Weather, etc.)       │
-│ ├─ Sector B: Desktop & Workflow (Pomodoro, etc.)          │
-│ ├─ Sector C: Industrial (WiFi Analyzer, etc.)             │
-│ ├─ Sector D: Automotive                                    │
-│ ├─ Sector E: Lifestyle                                     │
-│ └─ Sector F: Security                                      │
-│                                                              │
-│ LAYER 4: QUALITY & OPERATIONS                              │
-│ ├─ Startup Validator (Automatische Hardware-Checks)        │
-│ ├─ Performance Monitor (FPS, RAM, CPU)                     │
-│ ├─ Build Automation (PlatformIO)                           │
-│ └─ Git Workflow (Portable Struktur)                        │
-│                                                              │
-└─────────────────────────────────────────────────────────────┘
-```
+1.  **Voraussetzungen:** Stellen Sie sicher, dass ESP-IDF v5.x installiert und eingerichtet ist.
+2.  **Projekt klonen:** Kopieren Sie dieses Verzeichnis auf Ihren Rechner.
+3.  **Konfiguration:**
+    ```bash
+    cd esp32_luxury_ui
+    idf.py menuconfig
+    ```
+    *   Überprüfen Sie die Einstellungen unter `Component config -> LVGL` und `Component config -> ESP-LCD`.
+    *   Stellen Sie sicher, dass die GPIO-Pins in den BSP-Dateien (`components/bsp/bsp_*.c`) mit Ihrer Hardware übereinstimmen.
+4.  **Kompilieren und Flashen:**
+    ```bash
+    idf.py build
+    idf.py -p /dev/ttyUSB0 flash monitor
+    ```
 
----
+## 💻 VS Code Integration (Empfohlen)
 
-## 📊 DIE 33 APPS
+Für die beste Entwicklungserfahrung mit dem Agenten und VS Code:
 
-### Sector A: Smart Home & Ambient (8 Apps)
-- 🌤️ **Weather Crystal** - Visuelle Wetteranimationen
-- 🌡️ Thermostat - Temperaturregelung
-- 💡 Light Controller - Beleuchtungskontrolle
-- 🎵 Ambient Sound - Soundscape-Player
-- 🌙 Sleep Timer - Schlaf-Visualisierung
-- 🌬️ Air Quality - Luftqualitäts-Monitor
-- 📊 Energy Monitor - Energieverbrauch
-- 🔔 Smart Doorbell - Türklingel-Monitor
-
-### Sector B: Desktop & Workflow (6 Apps)
-- ⏱️ **Pomodoro Timer** - Fokus-Visualisierung
-- 📝 Note Pad - Schnelle Notizen
-- 📊 Performance HUD - System-Metriken
-- 🎯 Goal Tracker - Ziel-Verfolgung
-- 📅 Calendar - Terminkalender
-- ⏰ World Clock - Weltzeiten
-
-### Sector C: Industrial & Professional (5 Apps)
-- 📡 **WiFi Analyzer** - WiFi-Spektrum-Analyse
-- 🖨️ 3D Printer Monitor - Druck-Überwachung
-- 🔧 Device Manager - Geräteverwaltung
-- 📈 Data Logger - Datenerfassung
-- 🔬 Sensor Dashboard - Sensor-Visualisierung
-
-### Sector D: Automotive & Mobility (4 Apps)
-- 🚗 OBD2 Dashboard - Fahrzeug-Diagnose
-- 🗺️ Navigation HUD - Navigations-Display
-- ⛽ Fuel Monitor - Tankstellen-Finder
-- 🚦 Traffic Monitor - Verkehrsinformationen
-
-### Sector E: Lifestyle & Gadgets (5 Apps)
-- 👓 Cyberpunk Watch - Futuristische Uhr
-- 🎮 Game Launcher - Spiele-Hub
-- 🎨 Color Picker - Farbauswahl-Tool
-- 🎵 Music Player - Audio-Steuerung
-- 📸 Photo Viewer - Bildanzeige
-
-### Sector F: Security & Tools (5 Apps)
-- 🔐 2FA Token - Zwei-Faktor-Authentifizierung
-- 🔑 Password Manager - Passwort-Speicher
-- 🛡️ VPN Monitor - VPN-Status
-- 📱 Device Tracker - Geräte-Ortung
-- 🔒 Encryption Tool - Verschlüsselung
+1.  Installieren Sie die **"Espressif IDF"** Erweiterung.
+2.  Öffnen Sie den Ordner `esp32_luxury_ui` in VS Code.
+3.  Die Erweiterung erkennt automatisch das Projekt und bietet Funktionen wie `Build`, `Flash` und `Monitor` in der Statusleiste an.
 
 ---
 
-## 🚀 QUICK START
+### 💡 Hinweise für Agent-Entwicklung (z.B. Sonnet 4.5)
 
-### Hardware-Anforderungen
-- Waveshare ESP32-S3-Touch-LCD-1.47
-- USB-C Kabel
-- TF-Card (optional, für Assets)
+*   **Nutze die Komponenten:** Verwenden Sie die Funktionen aus `ui_components.h` (z.B. `ui_make_tile()`, `ui_make_button()`) anstelle von direktem `lv_obj_create()`, um das Design-System beizubehalten.
+*   **Navigation:** Verwenden Sie `ui_router_go(SCREEN_ID_...)` für den Wechsel zwischen Bildschirmen.
+*   **Styling:** Vermeiden Sie `lv_obj_set_style_*` und nutzen Sie stattdessen die Konstanten und Stile aus `ui_theme.h`.
 
-### Software-Anforderungen
-- PlatformIO (VS Code Extension oder CLI)
-- Git
-
-### Installation
-
-```bash
-# 1. Repository klonen
-git clone https://github.com/yourusername/chameleon-os.git
-cd chameleon-os
-
-# 2. Abhängigkeiten installieren
-pio pkg install
-
-# 3. Build
-pio run
-
-# 4. Flash
-pio run -t upload
-
-# 5. Monitor
-pio run -t monitor
-```
-
----
-
-## 📖 DOKUMENTATION
-
-- **[ARCHITECTURE.md](docs/ARCHITECTURE.md)** - Detaillierte Architektur-Übersicht
-- **[BEST_PRACTICES.md](docs/BEST_PRACTICES.md)** - Lessons Learned & Best Practices
-- **[APP_DEVELOPMENT.md](docs/APP_DEVELOPMENT.md)** - Wie man neue Apps entwickelt
-- **[AGENT_BRIEFING.md](AGENT_BRIEFING.md)** - Anleitung für KI-Agenten
-- **[PROJECT_STATUS.md](docs/PROJECT_STATUS.md)** - Aktueller Entwicklungs-Status
-
----
-
-## 🎯 ENTWICKLUNGS-WORKFLOW
-
-### Für jede App: Dummy → Funktionsfähig → Abgelegt
-
-**Phase 1: DUMMY ERSTELLEN** (Tag 1)
-```bash
-git checkout -b feature/weather-crystal
-# Erstelle App-Grundgerüst mit statischer UI
-git commit -m "Weather Crystal: Dummy v1.0"
-git push origin feature/weather-crystal
-```
-
-**Phase 2: FUNKTIONSFÄHIG MACHEN** (Tag 2-3)
-```bash
-# Implementiere echte Funktionalität
-# Integriere mit Event Bus
-# Optimiere Performance
-git commit -m "Weather Crystal: Feature Complete v1.0"
-```
-
-**Phase 3: ABGELEGT & DOKUMENTIERT** (Tag 4)
-```bash
-# Code-Review
-# Tests
-# Dokumentation
-git checkout develop && git pull
-git merge feature/weather-crystal
-git tag weather_crystal/v1.0.0
-git push origin develop weather_crystal/v1.0.0
-```
-
----
-
-## 🤖 FÜR KI-AGENTEN
-
-Wenn du ein KI-Agent bist (Claude, Cursor, Copilot, etc.), lese zuerst:
-
-**→ [AGENT_BRIEFING.md](AGENT_BRIEFING.md)**
-
-Dieses Dokument enthält:
-- ✅ Komplette Anleitung zur Implementierung
-- ✅ Code-Templates (ready-to-use)
-- ✅ Checklisten (strukturiert)
-- ✅ Best Practices (bewährt)
-- ✅ Debugging-Tipps (praktisch)
-
----
-
-## 📊 PROJECT STATUS
-
-| Component | Status | Version |
-|-----------|--------|---------|
-| Framework | ✅ Complete | 1.0.0 |
-| Weather Crystal | ⏳ In Progress | Dummy |
-| WiFi Analyzer | ⏳ In Progress | Dummy |
-| Pomodoro Timer | ⏳ In Progress | Dummy |
-| Other 30 Apps | ⏳ Planned | - |
-
-**Detaillierter Status**: [PROJECT_STATUS.md](docs/PROJECT_STATUS.md)
-
----
-
-## 🔧 TOOLCHAIN
-
-- **MCU**: ESP32-S3 Dual-Core (240 MHz)
-- **Display**: Waveshare 320×172 RGB (JD9853)
-- **Touch**: CST816S (I2C)
-- **RAM**: 8 MB PSRAM
-- **Build System**: PlatformIO
-- **Framework**: LVGL v9
-- **Language**: C
-
----
-
-## 📝 LIZENZ
-
-MIT License - Siehe [LICENSE](LICENSE) für Details
-
----
-
-## 🤝 BEITRAGEN
-
-Contributions sind willkommen! Bitte:
-
-1. Fork das Repository
-2. Erstelle einen Feature-Branch (`git checkout -b feature/amazing-feature`)
-3. Commit deine Änderungen (`git commit -m 'Add amazing feature'`)
-4. Push zum Branch (`git push origin feature/amazing-feature`)
-5. Öffne einen Pull Request
-
----
-
-## 📞 SUPPORT
-
-- **Issues**: [GitHub Issues](https://github.com/yourusername/chameleon-os/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/yourusername/chameleon-os/discussions)
-- **Documentation**: [docs/](docs/)
-
----
-
-## 🎓 LESSONS LEARNED
-
-Dieses Projekt basiert auf umfangreichen Erfahrungen mit ESP32-S3 Entwicklung:
-
-- ✅ Hardware-Initialisierung (Fehlertoleranz ist Pflicht)
-- ✅ Display-Konfiguration (Panel Gap nicht vergessen!)
-- ✅ WiFi-Integration (Reentrancy Guards essentiell)
-- ✅ LVGL Optimierung (Draw Buffer Sizing)
-- ✅ Theme-System (semantische Farben)
-- ✅ Event-Driven Architecture (statt Timer-Chaos)
-
-Siehe [BEST_PRACTICES.md](docs/BEST_PRACTICES.md) für Details.
-
----
-
-## 🚀 ROADMAP
-
-### Phase 1: Foundation ✅
-- Projekt-Struktur
-- HAL (Display, Touch, WiFi, NTP)
-- Framework (Event Bus, Theme Manager, Carousel)
-- Startup Validator
-
-### Phase 2: Erste 3 Apps
-- Weather Crystal (Dummy → Funktionsfähig)
-- WiFi Analyzer (Dummy → Funktionsfähig)
-- Pomodoro Timer (Dummy → Funktionsfähig)
-
-### Phase 3: Alle 33 Apps (Dummies)
-- Alle App-Grundgerüste
-- App-Registry
-- Carousel mit allen Apps
-
-### Phase 4: Weitere Apps (Funktionsfähig)
-- Iterativ weitere Apps implementieren
-- Performance optimieren
-- Dokumentation
-
-### Phase 5: Release v1.0.0
-- Stabilitäts-Tests
-- Performance-Optimierung
-- Finale Dokumentation
-
----
-
-**Chameleon OS: Ein Gerät. Eine Hardware. 33 verschiedene Möglichkeiten. 🦎**
-
-*Viel Erfolg!*
+Dieses Framework ist darauf ausgelegt, die Entwicklung zu beschleunigen und die Konsistenz des luxuriösen Designs zu gewährleisten.
