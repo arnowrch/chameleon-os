@@ -57,18 +57,49 @@ Chameleon OS is a production-ready embedded operating system for ESP32-S3 microc
 - ESP32-S3 development board
 - Waveshare 320×172 touch display
 
-### Building
+### Quick Deployment (Windows with COM7)
 
+**Using deployment script:**
+```bash
+deploy.bat
+```
+
+**Manual deployment:**
 ```bash
 # Build the project
 platformio run
 
-# Upload to device
+# Upload to device on COM7
 platformio run --target upload
 
 # Monitor serial output
 platformio device monitor
 ```
+
+### Quick Deployment (Linux/Mac)
+
+**Using deployment script:**
+```bash
+./deploy.sh
+```
+
+**Manual deployment:**
+```bash
+# Build the project
+platformio run
+
+# Upload to device (auto-detects port)
+platformio run --target upload
+
+# Monitor serial output
+platformio device monitor
+```
+
+### Deployment Documentation
+- **DEPLOYMENT_GUIDE.md** - Complete deployment instructions
+- **TESTING_CHECKLIST.md** - Production testing procedures
+- **deploy.bat** - Windows deployment script
+- **deploy.sh** - Linux/Mac deployment script
 
 ### Project Structure
 
